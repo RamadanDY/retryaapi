@@ -1,4 +1,6 @@
 import Blocks from "../models/block.js";
+import classes from "../models/class.js";
+import bookings from "../models/bookings.js";
 import createHttpError from "http-errors";
 
 export async function createBlock(req, res, next) {
@@ -17,28 +19,63 @@ export async function createBlock(req, res, next) {
   res.send("hello ");
 }
 
-export async function getAllBlocks(req, res, next) {
+export async function getBlocks(req, res, next) {
   try {
-    const getAllBlock = await Blocks.find();
-    if (!getAllBlock || getAllBlock.length === 0) {
-      return next(createHttpError(404, "couldn't find the blocks")); // Fixed
-    }
-    res.json({ getAllBlock });
+    const blocks = await Blocks.find()
+      .populate({
+        path: "classes",
+      })
+      // is changes the data into asscending(1) or descending(-1) order
+      .sort({ code: 1 });
+    return res.json(blocks);
   } catch (error) {
-    console.log(error);
-    next(error);
+    res.send(error);
   }
-  res.send("herroooo");
 }
 
-export async function getAllClasses(req, res, next) {
+export async function getBlockClasses(req, res, next) {
+  // we get the id from  the params that the user sends
+  // cause the id is added to the http route so we retrieve it from there
   const { id } = req.params;
-  if (!id) return next(createHttpError(400, "Block ID not found"));
+
+  if (!id) return next(createHttpError(400, "Block id is required"));
   try {
-    const allClasses = await Blocks.findById(id)
-      // lets add the populate mongoose method here
-      .populate({});
-    if (!allClasses) return next(createHttpError(404, "Block not found"));
-    return res.json(allClasses.block);
-  } catch (error) {}
+    const block = await Blocks.findById(id)
+      .populate({
+        path: "classes",
+        populate: [
+          { path: "block", select: "code" },
+          {
+            path: "bookings",
+            select: "timeRange course level representativeId",
+          },
+        ],
+      })
+      .sort({ code: 1 });
+
+    if (!block) return next(createHttpError(404, "Block not found"));
+
+    return res.json(block.classes);
+  } catch (error) {
+    console.trace(error);
+    next(error);
+  }
+}
+
+export async function getBlockById(req, res, next) {
+  const { id } = req.params;
+  if (!id)
+    return next(
+      createHttpError(404, "couldnt  find the block with this kinda ID")
+    );
+  try {
+    const block = await Blocks.findById(id).populate({
+      path: "classes",
+      select: "code fullCode isAvailable",
+    });
+    if (!block) return next(createHttpError(404, "cannof find block"));
+    return res.json(block);
+  } catch (error) {
+    next(error);
+  }
 }
