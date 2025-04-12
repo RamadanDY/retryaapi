@@ -12,4 +12,14 @@ export async function getAllClasses(req, res, next) {
   }
 }
 
-export async function getClassesById(req, res, next) {}
+export async function getClassesById(req, res, next) {
+  const { id } = req.params;
+  if (!id) return next(createHttpError(404, "class id is required"));
+  try {
+    const classes = await Classes.findById(id).populate("block", "code");
+    if (!classes) return next(createHttpError(404, "class not found"));
+    return res.json(classes);
+  } catch (error) {
+    next(error);
+  }
+}
