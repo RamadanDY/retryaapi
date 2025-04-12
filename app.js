@@ -1,6 +1,6 @@
 import express from "express";
 import blocksRouter from "./routes/blocks.js";
-import classRouter from "./models/class.js";
+import classRouter from "./routes/class.js";
 import { configDotenv } from "dotenv";
 
 configDotenv(); // ✅ Load .env first
