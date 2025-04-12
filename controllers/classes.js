@@ -6,8 +6,10 @@ export async function getAllClasses(req, res, next) {
   try {
     const classes = await Classes.find().populate("block", "code");
     if (!classes) return next(createHttpError(404, "Classes not found"));
-    res.json(classes);
+    return res.json(classes);
   } catch (error) {
     next(createHttpError(404, "error message"));
   }
 }
+
+export async function getClassesById(req, res, next) {}
