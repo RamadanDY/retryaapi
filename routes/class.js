@@ -1,4 +1,5 @@
 import {
+  createClasses,
   getAllClasses,
   getClassBookings,
   getClassesById,
@@ -10,5 +11,6 @@ const router = Router();
 router.get("/", getAllClasses);
 router.get("/:id", getClassesById);
 router.get("/:id/bookings", getClassBookings);
+router.post("/", createClasses);
 
 export default router;
