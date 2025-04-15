@@ -16,9 +16,23 @@ export async function getClassesById(req, res, next) {
   const { id } = req.params;
   if (!id) return next(createHttpError(404, "class id is required"));
   try {
-    const classes = await Classes.findById(id).populate("block", "code");
-    if (!classes) return next(createHttpError(404, "class not found"));
-    return res.json(classes);
+    const class_ = await Classes.findById(id).populate("block", "code");
+    if (!class_) return next(createHttpError(404, "class not found"));
+    return res.json(class_);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getClassBookings(req, res, next) {
+  const { id } = req.params;
+  if (!id) return next(createHttpError(400, "cannot find the id"));
+
+  try {
+    const classBooking = await Classes.findById(id).populate({
+      path: "bookings",
+    });
+    res.json(classBooking.bookings);
   } catch (error) {
     next(error);
   }

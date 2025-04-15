@@ -1,9 +1,14 @@
-import { getAllClasses, getClassesById } from "../controllers/classes.js";
+import {
+  getAllClasses,
+  getClassBookings,
+  getClassesById,
+} from "../controllers/classes.js";
 import { Router } from "express";
 
 const router = Router();
 
 router.get("/", getAllClasses);
-router.get("/:id/classes", getClassesById);
+router.get("/:id", getClassesById);
+router.get("/:id/bookings", getClassBookings);
 
 export default router;
