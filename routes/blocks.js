@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 router.post("/", createBlock);
-router.get("/c", getBlocks);
+router.get("/", getBlocks);
 router.get("/:id", getBlockById);
 router.get("/:id/classes", getBlockClasses);
 // Export the router so it can be used in the main server file

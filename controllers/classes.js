@@ -9,8 +9,6 @@ export async function createClasses(req, res, next) {
       createHttpError(400, "missing required fields: blockId code classId")
     );
 
-  console.log(blockId);
-
   try {
     const block = await Block.findById(_Id);
     if (!block) return next(createHttpError(400, "Block not found"));
