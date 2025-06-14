@@ -8,7 +8,7 @@ configDotenv(); // ✅ Load .env first
 const API_URL = process.env.API_URL;
 const PORT = 6080;
 
-const app = express(); // ✅ You missed this line earlier!
+const app = express();
 
 // we import the db connection to make sure it runs
 import("./db/taskdb.js");
